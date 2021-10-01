@@ -9,6 +9,9 @@ const SkillsScreen = ({ skills }) => {
   const dispatch = useDispatch();
   const skillDelete = useSelector((state) => state.skillDelete);
   const { loading, success, error } = skillDelete;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
   useEffect(() => {
     console.log("Deleted");
   }, [success]);
@@ -16,20 +19,22 @@ const SkillsScreen = ({ skills }) => {
     <div>
       <Container>
         <Row>
-          {skills && skills.length>0 ?
+          {skills && skills.length > 0 ? (
             skills.map((skill) => (
               <Col lg={4} sm={6} md={4}>
                 {loading && <Loader />}
                 {error && <Message variant="danger">{error}</Message>}
-                <i
-                  className="fas fa-trash"
-                  style={{ color: "red", fontSize: "2rem" }}
-                  onClick={() => {
-                    if (window.confirm("Are you sure?")) {
-                      dispatch(delSkill(skill._id));
-                    }
-                  }}
-                ></i>
+                {userInfo && userInfo.token && (
+                  <i
+                    className="fas fa-trash"
+                    style={{ color: "red", fontSize: "2rem" }}
+                    onClick={() => {
+                      if (window.confirm("Are you sure?")) {
+                        dispatch(delSkill(skill._id));
+                      }
+                    }}
+                  ></i>
+                )}
                 <div>
                   <Col sm={3} lg={6} md={6}>
                     <h4>{skill.techName}</h4>
@@ -54,9 +59,10 @@ const SkillsScreen = ({ skills }) => {
                 </div>
                 <Spacer />
               </Col>
-            )):(
-              <Message>No Skills added yet</Message>
-            )}
+            ))
+          ) : (
+            <Message>No Skills added yet</Message>
+          )}
         </Row>
       </Container>
     </div>

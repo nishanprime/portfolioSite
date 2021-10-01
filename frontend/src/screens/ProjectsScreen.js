@@ -10,28 +10,34 @@ const ProjectsScreen = ({ projects }) => {
   const dispatch = useDispatch();
   const projectDelete = useSelector((state) => state.projectDelete);
   const { error, loading, success } = projectDelete;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   useEffect(() => {
-    console.log("Deleted")
+    console.log("Deleted");
   }, [success]);
 
   return (
     <div>
       <Container>
         <Row>
-          {projects && projects.length>0 ?
+          {projects && projects.length > 0 ? (
             projects.map((data) => (
               <Col sm={12} xs={6} lg={4}>
                 {loading && <Loader />}
                 {error && <Message>{error}</Message>}
-                <i
-                  className="fas fa-trash"
-                  style={{ color: "red", fontSize: "2rem" }}
-                  onClick={() => {
-                    if (window.confirm("Are you sure?")) {
-                      dispatch(delProject(data._id));
-                    }
-                  }}
-                ></i>
+                {userInfo && userInfo.token && (
+                  <i
+                    className="fas fa-trash"
+                    style={{ color: "red", fontSize: "2rem" }}
+                    onClick={() => {
+                      if (window.confirm("Are you sure?")) {
+                        dispatch(delProject(data._id));
+                      }
+                    }}
+                  ></i>
+                )}
 
                 <Card style={{ width: "20rem" }}>
                   <Card.Img variant="top" src={data.image} />
@@ -71,7 +77,10 @@ const ProjectsScreen = ({ projects }) => {
                 </Card>
                 <Spacer />
               </Col>
-            )):(<Message>No Projects added yet</Message>)}
+            ))
+          ) : (
+            <Message>No Projects added yet</Message>
+          )}
         </Row>
       </Container>
     </div>
