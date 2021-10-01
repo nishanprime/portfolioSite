@@ -8,11 +8,12 @@ import ContactScreen from "./ContactScreen";
 import ProjectsScreen from "./ProjectsScreen";
 import SkillsScreen from "./SkillsScreen";
 import { modalPopActionLogin } from "../actions/showModalPopupLoginAction";
-import { adminSignin } from "../actions/adminSignin";
+
 import { getProjectListAction } from "../actions/projectData";
 import { getSkillsListAction } from "../actions/skillsData";
 import Loader from "../components/Lodaer";
 import Message from "../components/Message";
+import { userLoginAction } from "../actions/userAuthAction";
 const HomeScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +25,13 @@ const HomeScreen = () => {
     projects,
   } = projectList;
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const {
+    loading: userLoginLoading,
+    error: userLoginError,
+    userInfo,
+  } = userLogin;
+
   const skillList = useSelector((state) => state.skillList);
   const { loading: skillLoading, error: skillError, skills } = skillList;
 
@@ -33,8 +41,11 @@ const HomeScreen = () => {
   useEffect(() => {
     dispatch(getProjectListAction());
     dispatch(getSkillsListAction());
-  }, [dispatch]);
-
+  }, [dispatch, userInfo]);
+  const modalClose = () => {
+    dispatch(modalPopActionLogin(false));
+    // setSuccessMessage(false);
+  };
   return (
     <div>
       <Container className="text-center">
@@ -110,21 +121,16 @@ const HomeScreen = () => {
         <Spacer t="20px" />
 
         <div>
-          <Modal show={show} onHide={!show}>
+          <Modal show={show} onHide={!show || userInfo}>
             <Modal.Header>
               <Modal.Title>Modal heading</Modal.Title>
-              <Button
-                onClick={() => {
-                  dispatch(modalPopActionLogin(false));
-                }}
-              >
-                Close
-              </Button>
+              <Button onClick={modalClose}>Close</Button>
             </Modal.Header>
             <Modal.Body>
               <form
-                onSubmit={() => {
-                  dispatch(adminSignin(email, password));
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  dispatch(userLoginAction(email, password));
                 }}
               >
                 <div class="form-group">
@@ -155,7 +161,16 @@ const HomeScreen = () => {
                   </div>
                 </div>
                 <Spacer />
-                <Button type="submit">Sign In</Button>
+                {userLoginError && <Message>{userLoginError}</Message>}
+              
+                {userLoginLoading && <Loader />}
+                {userInfo && userInfo.name ? (
+                  <Message variant="success">
+                    Login Successful. You can close it now.
+                  </Message>
+                ) : (
+                  <Button type="submit">Sign In</Button>
+                )}
               </form>
             </Modal.Body>
             <Modal.Footer></Modal.Footer>

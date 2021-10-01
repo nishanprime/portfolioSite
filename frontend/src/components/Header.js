@@ -1,15 +1,26 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Navbar, Container, Nav, Button, Modal } from "react-bootstrap";
+import { Navbar, Container, Nav, Button, Modal, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { modalPopActionLogin } from "../actions/showModalPopupLoginAction";
+import { logout } from "../actions/userAuthAction";
 const Header = () => {
   const dispatch = useDispatch();
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const {
+    loading: userLoginLoading,
+    error: userLoginError,
+    userInfo,
+  } = userLogin;
+
   const modalHandler = () => {
-    console.log("I am in")
+    console.log("I am in");
     dispatch(modalPopActionLogin(true));
-   
+  };
+
+  const logoutHandler = () => {
+    dispatch(logout());
   };
   return (
     <header>
@@ -26,19 +37,44 @@ const Header = () => {
           </LinkContainer>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
+            
             <Nav style={{ marginLeft: "auto", marginRight: "10px" }}>
               <LinkContainer to="/">
                 <Nav.Link>Home</Nav.Link>
               </LinkContainer>
+              
               <Nav.Link href="#projects">Projects</Nav.Link>
               <Nav.Link href="#skillsSection">Skills</Nav.Link>
               <Nav.Link href="#contactSection">Contact</Nav.Link>
-                <Button className="btn btn-sm" variant="warning">
-                  Resume Download
+              {userInfo && userInfo.name && (
+                <NavDropdown title={"Add new data"} id="addnewdata">
+                  <Nav.Link href="#addnewproject">
+                    <NavDropdown.Item>Add new project</NavDropdown.Item>
+                  </Nav.Link>
+                  <Nav.Link href="#addnewskill">
+                    <NavDropdown.Item>Add new skills</NavDropdown.Item>
+                  </Nav.Link>
+                  <Nav.Link href="#addnewresume">
+                    <NavDropdown.Item>Add new resume</NavDropdown.Item>
+                  </Nav.Link>
+                </NavDropdown>
+              )}
+              <Button className="btn btn-sm" variant="warning">
+                Resume Download
+              </Button>
+              {userInfo && userInfo.name ? (
+                <Button
+                  className="btn btn-sm"
+                  variant="danger"
+                  onClick={logoutHandler}
+                >
+                  Log Out
                 </Button>
+              ) : (
                 <Button className="btn btn-sm" onClick={modalHandler}>
                   Admin SignIn
                 </Button>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Navbar>
