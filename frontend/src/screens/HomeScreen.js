@@ -1,12 +1,40 @@
-import React from "react";
-import { Row, Col, Container, Image, Modal } from "react-bootstrap";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
+import React, { useState, useEffect } from "react";
+
+import { useSelector, useDispatch } from "react-redux";
+
+import { Container, Image, Modal, Button } from "react-bootstrap";
 import Spacer from "../components/Spacer";
 import ContactScreen from "./ContactScreen";
 import ProjectsScreen from "./ProjectsScreen";
 import SkillsScreen from "./SkillsScreen";
+import { modalPopActionLogin } from "../actions/showModalPopupLoginAction";
+import { adminSignin } from "../actions/adminSignin";
+import { getProjectListAction } from "../actions/projectData";
+import { getSkillsListAction } from "../actions/skillsData";
+import Loader from "../components/Lodaer";
+import Message from "../components/Message";
 const HomeScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const projectList = useSelector((state) => state.projectList);
+  const {
+    loading: projectLoading,
+    error: projectError,
+    projects,
+  } = projectList;
+
+  const skillList = useSelector((state) => state.skillList);
+  const { loading: skillLoading, error: skillError, skills } = skillList;
+
+  const dispatch = useDispatch();
+  const { show } = useSelector((state) => state.modalLoginState);
+
+  useEffect(() => {
+    dispatch(getProjectListAction());
+    dispatch(getSkillsListAction());
+  }, [dispatch]);
+
   return (
     <div>
       <Container className="text-center">
@@ -52,31 +80,86 @@ const HomeScreen = () => {
         <Spacer t="50px" />
         <Container className="text-center">
           <h1>Projects</h1>
+          {projectLoading ? (
+            <Loader />
+          ) : projectError ? (
+            <Message>{projectError}</Message>
+          ) : (
+            <div>
+              <Spacer t="20px" />
+
+              <ProjectsScreen projects={projects} />
+              <Spacer t="20px" />
+            </div>
+          )}
+          {skillLoading ? (
+            <Loader />
+          ) : skillError ? (
+            <Message>{skillError}</Message>
+          ) : (
+            <div id="skillsSection">
+              <Container className="text-center">
+                <h1>Skills / Experience</h1>
+              </Container>
+              <Spacer t="20px" />
+              <SkillsScreen skills={skills} />
+            </div>
+          )}
         </Container>
-        <Spacer t="20px" />
 
-        <ProjectsScreen />
-        <Spacer t="20px" />
-
-        <div id="skillsSection">
-          <Container className="text-center">
-            <h1>Skills / Experience</h1>
-          </Container>
-          <Spacer t="20px" />
-          <SkillsScreen />
-        </div>
         <Spacer t="20px" />
 
         <div>
-        {/* <Modal show={true} onHide={false}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    Woohoo, you're reading this text in a modal!
-                  </Modal.Body>
-                  <Modal.Footer></Modal.Footer>
-                </Modal> */}
+          <Modal show={show} onHide={!show}>
+            <Modal.Header>
+              <Modal.Title>Modal heading</Modal.Title>
+              <Button
+                onClick={() => {
+                  dispatch(modalPopActionLogin(false));
+                }}
+              >
+                Close
+              </Button>
+            </Modal.Header>
+            <Modal.Body>
+              <form
+                onSubmit={() => {
+                  dispatch(adminSignin(email, password));
+                }}
+              >
+                <div class="form-group">
+                  <label class="form-label mt-4">
+                    Only intended for Nishan
+                  </label>
+                  <div class="form-floating mb-3">
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="floatingInput"
+                      placeholder="Enter authorized email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <label for="floatingInput">Email address</label>
+                  </div>
+                  <div class="form-floating">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="floatingPassword"
+                      placeholder="Enter Valid Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <label for="floatingPassword">Password</label>
+                  </div>
+                </div>
+                <Spacer />
+                <Button type="submit">Sign In</Button>
+              </form>
+            </Modal.Body>
+            <Modal.Footer></Modal.Footer>
+          </Modal>
         </div>
 
         <div id="contactSection">

@@ -1,11 +1,15 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Navbar, Container, Nav, Button, Modal } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { modalPopActionLogin } from "../actions/showModalPopupLoginAction";
 const Header = () => {
-  const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
 
   const modalHandler = () => {
-    setShow(!show);
+    console.log("I am in")
+    dispatch(modalPopActionLogin(true));
+   
   };
   return (
     <header>
@@ -29,25 +33,12 @@ const Header = () => {
               <Nav.Link href="#projects">Projects</Nav.Link>
               <Nav.Link href="#skillsSection">Skills</Nav.Link>
               <Nav.Link href="#contactSection">Contact</Nav.Link>
-              <LinkContainer to="#resume_download">
                 <Button className="btn btn-sm" variant="warning">
                   Resume Download
                 </Button>
-              </LinkContainer>
-              <LinkContainer to="#resume_download">
                 <Button className="btn btn-sm" onClick={modalHandler}>
                   Admin SignIn
                 </Button>
-                {/* <Modal show={true} onHide={false}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    Woohoo, you're reading this text in a modal!
-                  </Modal.Body>
-                  <Modal.Footer></Modal.Footer>
-                </Modal> */}
-              </LinkContainer>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
