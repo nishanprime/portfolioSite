@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getProjectDetail, updateProject } from "../actions/projectData";
 import { modalPopActionLogin } from "../actions/showModalPopupLoginAction";
@@ -19,6 +20,7 @@ const ProjectEditScreen = ({ match, history }) => {
   const [gitHubRepo, setGithubRepo] = useState("");
   const [technologyUsed, setTechnologyUsed] = useState([]);
   const [image, setImage] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const projectId = match.params.id;
   const dispatch = useDispatch();
@@ -82,6 +84,26 @@ const ProjectEditScreen = ({ match, history }) => {
       dispatch(updateProject(updatedProjectObj));
     } catch (error) {
       window.alert("Error in Technology Used Field");
+    }
+  };
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.post("/api/upload", formData, config);
+      setImage(data);
+      setUploading(false);
+    } catch (error) {
+      console.log(error);
+      setUploading(false);
     }
   };
   return (
@@ -179,6 +201,14 @@ const ProjectEditScreen = ({ match, history }) => {
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               ></Form.Control>
+              <Spacer t={"5px"} />
+              <Form.File
+                id="image-file"
+                label="Chose File"
+                custom
+                onChange={uploadFileHandler}
+              ></Form.File>
+              {uploading && <Loader />}
             </Form.Group>
             <Spacer />
             <Button type="submit" variant="primary">
