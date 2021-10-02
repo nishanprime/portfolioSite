@@ -8,13 +8,13 @@ import ContactScreen from "./ContactScreen";
 import ProjectsScreen from "./ProjectsScreen";
 import SkillsScreen from "./SkillsScreen";
 import { modalPopActionLogin } from "../actions/showModalPopupLoginAction";
-
-import { getProjectListAction } from "../actions/projectData";
+import { createProject, getProjectListAction } from "../actions/projectData";
 import { getSkillsListAction } from "../actions/skillsData";
 import Loader from "../components/Lodaer";
 import Message from "../components/Message";
 import { userLoginAction } from "../actions/userAuthAction";
-const HomeScreen = () => {
+import CreateNewProject from "../components/EditProduct";
+const HomeScreen = ({history}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -91,6 +91,9 @@ const HomeScreen = () => {
         <Spacer t="50px" />
         <Container className="text-center">
           <h1>Projects</h1>
+          {userInfo && userInfo.name && (
+           <CreateNewProject history={history}/>
+          )}
           {projectLoading ? (
             <Loader />
           ) : projectError ? (
@@ -99,7 +102,7 @@ const HomeScreen = () => {
             <div>
               <Spacer t="20px" />
 
-              <ProjectsScreen projects={projects} />
+              <ProjectsScreen projects={projects} history={history}/>
               <Spacer t="20px" />
             </div>
           )}

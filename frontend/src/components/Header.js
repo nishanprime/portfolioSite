@@ -1,10 +1,18 @@
 import React, { useState } from "react";
+import { Route } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Navbar, Container, Nav, Button, Modal, NavDropdown } from "react-bootstrap";
+import {
+  Navbar,
+  Container,
+  Nav,
+  Button,
+  Modal,
+  NavDropdown,
+} from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { modalPopActionLogin } from "../actions/showModalPopupLoginAction";
 import { logout } from "../actions/userAuthAction";
-const Header = () => {
+const Header = ({ history }) => {
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -37,12 +45,11 @@ const Header = () => {
           </LinkContainer>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
-            
             <Nav style={{ marginLeft: "auto", marginRight: "10px" }}>
               <LinkContainer to="/">
                 <Nav.Link>Home</Nav.Link>
               </LinkContainer>
-              
+
               <Nav.Link href="#projects">Projects</Nav.Link>
               <Nav.Link href="#skillsSection">Skills</Nav.Link>
               <Nav.Link href="#contactSection">Contact</Nav.Link>
@@ -59,9 +66,20 @@ const Header = () => {
                   </Nav.Link>
                 </NavDropdown>
               )}
-              <Button className="btn btn-sm" variant="warning">
-                Resume Download
-              </Button>
+              <Route
+                render={({ history }) => (
+                  <Button
+                    className="btn btn-sm"
+                    onClick={() => {
+                      history.push("/api/get/resume");
+                    }}
+                    variant="warning"
+                  >
+                    Resume Download
+                  </Button>
+                )}
+              />
+
               {userInfo && userInfo.name ? (
                 <Button
                   className="btn btn-sm"

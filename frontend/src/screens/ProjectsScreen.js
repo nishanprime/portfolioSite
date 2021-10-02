@@ -6,7 +6,7 @@ import projectData from "../projectsData";
 import Message from "../components/Message";
 import { delProject } from "../actions/projectData";
 import Loader from "../components/Lodaer";
-const ProjectsScreen = ({ projects }) => {
+const ProjectsScreen = ({ projects,history }) => {
   const dispatch = useDispatch();
   const projectDelete = useSelector((state) => state.projectDelete);
   const { error, loading, success } = projectDelete;
@@ -28,15 +28,33 @@ const ProjectsScreen = ({ projects }) => {
                 {loading && <Loader />}
                 {error && <Message>{error}</Message>}
                 {userInfo && userInfo.token && (
-                  <i
-                    className="fas fa-trash"
-                    style={{ color: "red", fontSize: "2rem" }}
-                    onClick={() => {
-                      if (window.confirm("Are you sure?")) {
-                        dispatch(delProject(data._id));
-                      }
-                    }}
-                  ></i>
+                  <div>
+                    <i
+                      className="fas fa-trash"
+                      style={{
+                        color: "red",
+                        fontSize: "2rem",
+                        margin: "0 20px",
+                      }}
+                      onClick={() => {
+                        if (window.confirm("Are you sure?")) {
+                          dispatch(delProject(data._id));
+                        }
+                      }}
+                    ></i>
+
+                    <i
+                      className="fas fa-edit"
+                      style={{
+                        color: "teal",
+                        fontSize: "2rem",
+                        margin: "0 20px",
+                      }}
+                      onClick={() => {
+                        history.push(`/projects/${data._id}/edit`);
+                      }}
+                    ></i>
+                  </div>
                 )}
 
                 <Card style={{ width: "20rem" }}>

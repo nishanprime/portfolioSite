@@ -9,7 +9,9 @@ const AddProjectsAndSKills = () => {
     userInfo,
     success,
   } = userLogin;
-  return <div>ad</div>;
+  return <div>
+      
+  </div>;
 };
 
 export default AddProjectsAndSKills;

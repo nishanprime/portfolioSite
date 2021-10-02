@@ -1,8 +1,19 @@
 import ProjectModel from "../models/ProjectModel.js";
 import asyncHandler from "express-async-handler";
+
 export const fetchProjects = asyncHandler(async (req, res) => {
   const projects = await ProjectModel.find({});
   res.json(projects);
+});
+
+export const getProjectDetail = asyncHandler(async (req, res) => {
+  const project = await ProjectModel.findById(req.params.id);
+  if (project) {
+    res.json(project);
+  } else {
+    res.status(404);
+    throw new Error("Project not found");
+  }
 });
 
 export const projectsDelete = asyncHandler(async (req, res) => {
@@ -34,7 +45,7 @@ export const createProject = asyncHandler(async (req, res) => {
 export const updateProject = asyncHandler(async (req, res) => {
   const { name, description, demoSite, gitHubRepo, technologyUsed, image } =
     req.body;
-console.log("object")
+  console.log("object");
   const project = await ProjectModel.findById(req.params.id);
 
   if (project) {
