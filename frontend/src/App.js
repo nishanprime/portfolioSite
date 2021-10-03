@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import HomeScreen from "./screens/HomeScreen";
 import ProjectEditScreen from "./screens/ProjectEditScreen";
 import ProjectsScreen from "./screens/ProjectsScreen";
+import SkillEditScreen from "./screens/SkillEditScreen";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Container>
           <Route path="/" component={HomeScreen} exact />
           <Route path="/projects/:id/edit" component={ProjectEditScreen} />
+          <Route path="/skills/:id/edit" component={SkillEditScreen} />
         </Container>
       </main>
       <Footer />

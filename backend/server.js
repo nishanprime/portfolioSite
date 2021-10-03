@@ -13,18 +13,29 @@ dotenv.config();
 connectDB();
 const app = express();
 app.use(express.json());
-app.get("/", (req, res) => {
-  res.send("Api is running");
-});
 
+const __dirname = path.resolve();
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
+if (process.env.NODE_ENV === "production") {
+  console.log("I am ina")
+
+  app.use(express.static(path.join(__dirname, "/frontend/build")));
+
+  app.get("*", (req, res) => {
+    console.log("I am in")
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running...");
+  });
+}
 
 app.use("/api/projects", ProjectRoutes);
 app.use("/api/skills", SkillsRoutes);
 app.use("/api/users", UserRoutes);
 app.use("/api/upload", UploadRoutes);
-
-const __dirname = path.resolve();
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 app.use(errorHandler);
 const PORT = process.env.PORT || 5000;

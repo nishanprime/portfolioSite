@@ -7,6 +7,8 @@ import {
   PROJECT_DELETE_REQ,
   PROJECT_DELETE_SUC,
   PROJECT_DETAIL_FAIL,
+  PROJECT_DETAIL_REQ,
+  PROJECT_DETAIL_SUC,
   PROJECT_FETCH_FAIL,
   PROJECT_FETCH_REQ,
   PROJECT_FETCH_SUC,
@@ -40,7 +42,7 @@ export const getProjectListAction = () => async (dispatch, getState) => {
 export const getProjectDetail = (id) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: PROJECT_DELETE_REQ,
+      type: PROJECT_DETAIL_REQ,
     });
     const {
       userLogin: { userInfo },
@@ -54,7 +56,7 @@ export const getProjectDetail = (id) => async (dispatch, getState) => {
 
     const { data } = await axios.get(`/api/projects/${id}`, config);
     dispatch({
-      type: PROJECT_DELETE_SUC,
+      type: PROJECT_DETAIL_SUC,
       payload: data,
     });
   } catch (error) {

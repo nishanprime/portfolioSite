@@ -5,7 +5,7 @@ import Message from "../components/Message";
 import { useDispatch, useSelector } from "react-redux";
 import { delSkill } from "../actions/skillsData";
 import Loader from "../components/Lodaer";
-const SkillsScreen = ({ skills }) => {
+const SkillsScreen = ({ skills, history }) => {
   const dispatch = useDispatch();
   const skillDelete = useSelector((state) => state.skillDelete);
   const { loading, success, error } = skillDelete;
@@ -25,15 +25,28 @@ const SkillsScreen = ({ skills }) => {
                 {loading && <Loader />}
                 {error && <Message variant="danger">{error}</Message>}
                 {userInfo && userInfo.token && (
-                  <i
-                    className="fas fa-trash"
-                    style={{ color: "red", fontSize: "2rem" }}
-                    onClick={() => {
-                      if (window.confirm("Are you sure?")) {
-                        dispatch(delSkill(skill._id));
-                      }
-                    }}
-                  ></i>
+                  <div>
+                    <i
+                      className="fas fa-trash"
+                      style={{ color: "red", fontSize: "2rem" }}
+                      onClick={() => {
+                        if (window.confirm("Are you sure?")) {
+                          dispatch(delSkill(skill._id));
+                        }
+                      }}
+                    ></i>
+                    <i
+                      className="fas fa-edit"
+                      style={{
+                        color: "teal",
+                        fontSize: "2rem",
+                        margin: "0 20px",
+                      }}
+                      onClick={() => {
+                        history.push(`/skills/${skill._id}/edit`);
+                      }}
+                    ></i>
+                  </div>
                 )}
                 <div>
                   <Col sm={3} lg={6} md={6}>

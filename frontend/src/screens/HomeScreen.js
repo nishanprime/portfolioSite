@@ -8,13 +8,14 @@ import ContactScreen from "./ContactScreen";
 import ProjectsScreen from "./ProjectsScreen";
 import SkillsScreen from "./SkillsScreen";
 import { modalPopActionLogin } from "../actions/showModalPopupLoginAction";
-import { createProject, getProjectListAction } from "../actions/projectData";
+import { getProjectListAction } from "../actions/projectData";
 import { getSkillsListAction } from "../actions/skillsData";
 import Loader from "../components/Lodaer";
 import Message from "../components/Message";
 import { userLoginAction } from "../actions/userAuthAction";
 import CreateNewProject from "../components/EditProduct";
-const HomeScreen = ({history}) => {
+import CreateNewSkills from "../components/EditSkills";
+const HomeScreen = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -87,38 +88,51 @@ const HomeScreen = ({history}) => {
           </div>
         </div>
       </Container>
-      <div id="projects">
+      <div>
         <Spacer t="50px" />
         <Container className="text-center">
-          <h1>Projects</h1>
-          {userInfo && userInfo.name && (
-           <CreateNewProject history={history}/>
-          )}
-          {projectLoading ? (
-            <Loader />
-          ) : projectError ? (
-            <Message>{projectError}</Message>
-          ) : (
-            <div>
-              <Spacer t="20px" />
+          <div id="projects">
+            <h1>Projects</h1>
+            <Spacer t="20px" />
 
-              <ProjectsScreen projects={projects} history={history}/>
-              <Spacer t="20px" />
-            </div>
-          )}
-          {skillLoading ? (
-            <Loader />
-          ) : skillError ? (
-            <Message>{skillError}</Message>
-          ) : (
-            <div id="skillsSection">
-              <Container className="text-center">
-                <h1>Skills / Experience</h1>
-              </Container>
-              <Spacer t="20px" />
-              <SkillsScreen skills={skills} />
-            </div>
-          )}
+            {userInfo && userInfo.name && (
+              <CreateNewProject history={history} />
+            )}
+            <Spacer t="20px" />
+
+            {projectLoading ? (
+              <Loader />
+            ) : projectError ? (
+              <Message>{projectError}</Message>
+            ) : (
+              <div>
+                <Spacer t="20px" />
+
+                <ProjectsScreen projects={projects} history={history} />
+                <Spacer t="20px" />
+              </div>
+            )}
+          </div>
+
+          <div id="skillsSection">
+            <h1>Skills / Experience</h1>
+            <Spacer t="20px" />
+
+            {userInfo && userInfo.name && <CreateNewSkills history={history} />}
+            <Spacer t="20px" />
+
+            {skillLoading ? (
+              <Loader />
+            ) : skillError ? (
+              <Message>{skillError}</Message>
+            ) : (
+              <div>
+                <Container className="text-center"></Container>
+                <Spacer t="20px" />
+                <SkillsScreen skills={skills} history={history} />
+              </div>
+            )}
+          </div>
         </Container>
 
         <Spacer t="20px" />
@@ -165,7 +179,7 @@ const HomeScreen = ({history}) => {
                 </div>
                 <Spacer />
                 {userLoginError && <Message>{userLoginError}</Message>}
-              
+
                 {userLoginLoading && <Loader />}
                 {userInfo && userInfo.name ? (
                   <Message variant="success">

@@ -9,7 +9,13 @@ import {
   ProjectReducer,
   ProjectUpdateReducer,
 } from "./reducers/ProjectReducer";
-import { SkillDelReducer, SkillReducer } from "./reducers/SkillsReducer";
+import {
+  SkillCreateReducer,
+  SkillDelReducer,
+  SkillDetailReducer,
+  SkillReducer,
+  SkillUpdateReducer,
+} from "./reducers/SkillsReducer";
 import { userLoginReducer } from "./reducers/UserAuthReducer";
 const reducer = combineReducers({
   modalLoginState: showModalPopupReducer,
@@ -21,6 +27,9 @@ const reducer = combineReducers({
   projectCreate: ProjectCreateReducer,
   projectDetail: ProjectDetailReducer,
   projectUpdate: ProjectUpdateReducer,
+  skillCreate: SkillCreateReducer,
+  skillUpdate: SkillUpdateReducer,
+  skillDetail: SkillDetailReducer,
 });
 
 const projectListFromStorage = localStorage.getItem("projectList")
