@@ -16,6 +16,7 @@ import {
   PROJECT_UPDATE_FAIL,
   PROJECT_UPDATE_RESET,
   PROJECT_DETAIL_RESET,
+  PROJECT_DETAIL_SUC,
 } from "../constants/ProjectListContants";
 
 export const ProjectReducer = (state = { projects: [] }, action) => {
@@ -64,7 +65,7 @@ export const ProjectDetailReducer = (state = { project: {} }, action) => {
   switch (action.type) {
     case PROJECT_DETAIL_REQ:
       return { ...state, loading: true };
-    case PROJECT_DELETE_SUC:
+    case PROJECT_DETAIL_SUC:
       return { loading: false, project: action.payload };
     case PROJECT_DETAIL_FAIL:
       return { loading: false, error: action.payload };

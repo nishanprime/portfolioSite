@@ -46,7 +46,10 @@ const ProjectEditScreen = ({ match, history }) => {
   } = projectUpdate;
 
   useEffect(() => {
+    console.log("Inside edit screen loadup");
     if (updateSuccess) {
+      console.log("Successfully updated");
+
       dispatch({ type: PROJECT_UPDATE_RESET });
       history.push("/");
     }
@@ -54,9 +57,15 @@ const ProjectEditScreen = ({ match, history }) => {
       history.push("/");
       dispatch(modalPopActionLogin(true));
     } else {
+      console.log("Checking if project exist");
+
       if (!project.name || project._id !== projectId) {
+      console.log("It dies not");
+
         dispatch(getProjectDetail(projectId));
       } else {
+      console.log("It does");
+
         setName(project.name);
         setDescription(project.description);
         setDemoSite(project.demoSite);

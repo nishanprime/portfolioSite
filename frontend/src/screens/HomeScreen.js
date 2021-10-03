@@ -44,7 +44,7 @@ const HomeScreen = ({ history }) => {
       dispatch(getProjectListAction());
       dispatch(getSkillsListAction());
     }
-  }, [dispatch, userInfo, skills, projects]);
+  }, [dispatch]);
   const modalClose = () => {
     dispatch(modalPopActionLogin(false));
     // setSuccessMessage(false);

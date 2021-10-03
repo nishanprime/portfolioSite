@@ -40,6 +40,8 @@ export const getProjectListAction = () => async (dispatch, getState) => {
 };
 
 export const getProjectDetail = (id) => async (dispatch, getState) => {
+  console.log("Called get project detail");
+
   try {
     dispatch({
       type: PROJECT_DETAIL_REQ,
@@ -55,6 +57,7 @@ export const getProjectDetail = (id) => async (dispatch, getState) => {
     };
 
     const { data } = await axios.get(`/api/projects/${id}`, config);
+    console.log(data)
     dispatch({
       type: PROJECT_DETAIL_SUC,
       payload: data,
