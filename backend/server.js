@@ -32,20 +32,20 @@ app.use("/api/skills", SkillsRoutes);
 app.use("/api/users", UserRoutes);
 app.use("/api/upload", UploadRoutes);
 
-// if (process.env.NODE_ENV === "production") {
-//   console.log("I am ina");
+if (process.env.NODE_ENV === "production") {
+  console.log("I am ina");
 
-//   app.use(express.static(path.join(__dirname, "/frontend/build")));
+  app.use(express.static(path.join(__dirname, "/frontend/build")));
 
-//   app.get("*", (req, res) => {
-//     console.log("I am in");
-//     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
-//   });
-// } else {
+  app.get("*", (req, res) => {
+    console.log("I am in");
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
+  });
+ } else {
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
-// }
+ }
 
 app.use(errorHandler);
 
