@@ -40,9 +40,11 @@ const HomeScreen = ({ history }) => {
   const { show } = useSelector((state) => state.modalLoginState);
 
   useEffect(() => {
-    dispatch(getProjectListAction());
-    dispatch(getSkillsListAction());
-  }, [dispatch, userInfo]);
+    if (skills.length === 0 || projects.length === 0) {
+      dispatch(getProjectListAction());
+      dispatch(getSkillsListAction());
+    }
+  }, [dispatch, userInfo, skills, projects]);
   const modalClose = () => {
     dispatch(modalPopActionLogin(false));
     // setSuccessMessage(false);

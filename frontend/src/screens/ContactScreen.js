@@ -1,33 +1,43 @@
-import dotenv from "dotenv";
-
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import Spacer from "../components/Spacer";
 import emailjs from "emailjs-com";
-dotenv.config();
 
 const ContactScreen = () => {
-  const [fullName, setFullName] = useState("");
+  const [fullName, setFullName] = useState(null);
   const [email, setEmail] = useState("");
   const [query, setQuery] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+  const [serviceId, setServiceId] = useState(null);
+  const [templateId, setTemplateId] = useState(null);
 
+  useEffect(() => {
+    const getIds = async () => {
+      const { data } = await axios.get("/api/config/contactids");
+      const { USER_ID, ACCESS_TOKEN, SERVICE_ID, TEMPLATE_ID } = data;
+      setUserId(USER_ID);
+      setAccessToken(ACCESS_TOKEN);
+      setServiceId(SERVICE_ID);
+      setTemplateId(TEMPLATE_ID);
+    };
+
+    if (!userId || !accessToken || !serviceId || templateId) {
+      getIds();
+    }
+    // eslint-disable-next-line
+  }, []);
   const sendMessageHandler = (e) => {
     e.preventDefault();
-    emailjs
-      .sendForm(
-        process.env.REACT_APP_SERVICE_ID,
-        process.env.REACT_APP_TEMPLATE_ID,
-        e.target,
-        process.env.REACT_APP_USER_ID
-      )
-      .then(
-        (result) => {
-          console.log(result.text);
-        },
-        (error) => {
-          console.log(error.text);
-        }
-      );
+    emailjs.sendForm(serviceId, templateId, e.target, userId).then(
+      (result) => {
+        console.log(result.text);
+      },
+      (error) => {
+        console.log(error.text);
+      }
+    );
     e.target.reset();
   };
 
